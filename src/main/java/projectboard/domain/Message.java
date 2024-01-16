@@ -15,9 +15,9 @@ public class Message {
     @ApiModelProperty(example = "쪽지 고유 번호")
     private Long id;
     @ApiModelProperty(example = "쪽지 보낸이")
-    private String sendUserName;
+    private Long sendUserId;
     @ApiModelProperty(example = "쪽지 받는이")
-    private String receiveUserName;
+    private Long receiveUserId;
     @ApiModelProperty(example = "쪽지 보낸 일자")
     private LocalDateTime sendAt;
     @ApiModelProperty(example = "쪽지 읽은 일자")
@@ -29,9 +29,9 @@ public class Message {
     @ApiModelProperty(example = "쪽지 내용")
     private String content;
 
-    public Message(String sendUserName, String receiveUserName, LocalDateTime sendAt, LocalDateTime receiveAt, int checked, String title, String content) {
-        this.sendUserName = sendUserName;
-        this.receiveUserName = receiveUserName;
+    public Message(Long sendUserId, Long receiveUserId, LocalDateTime sendAt, LocalDateTime receiveAt, int checked, String title, String content) {
+        this.sendUserId = sendUserId;
+        this.receiveUserId = receiveUserId;
         this.sendAt = sendAt;
         this.receiveAt = receiveAt;
         this.checked = checked;
