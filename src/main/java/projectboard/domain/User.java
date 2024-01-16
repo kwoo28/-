@@ -1,16 +1,11 @@
 package projectboard.domain;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Getter @Setter
 @NoArgsConstructor
 //https://kim-jong-hyun.tistory.com/49
 public class User {
@@ -27,6 +22,7 @@ public class User {
     @ApiModelProperty(example = "유저 생성 일자")
     private LocalDateTime createdAt;
 
+    @Builder
     public User(String userId, String userPw, String userName, String email) {
         this.userId = userId;
         this.userPw = userPw;

@@ -1,13 +1,9 @@
 package projectboard.domain;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Tag {
     @ApiModelProperty(example = "해시태그 고유 번호")
@@ -15,6 +11,7 @@ public class Tag {
     @ApiModelProperty(example = "해시태그 이름")
     private String name;
 
+    @Builder
     public Tag(String name) {
         this.name = name;
     }

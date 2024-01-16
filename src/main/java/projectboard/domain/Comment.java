@@ -1,16 +1,11 @@
 package projectboard.domain;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Getter @Setter
 @NoArgsConstructor
 public class Comment {
     @ApiModelProperty(example = "댓글 고유 번호")
@@ -24,6 +19,7 @@ public class Comment {
     @ApiModelProperty(example = "댓글 생성 일자")
     private LocalDateTime createdAt;
 
+    @Builder
     public Comment(Long postId, Long userId, String content) {
         this.postId = postId;
         this.userId = userId;
