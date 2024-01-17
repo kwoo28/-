@@ -27,11 +27,9 @@ public class RecvMessage {
     private String content;
 
     @Builder
-    public RecvMessage(Long sendUserId, Long recvUserId, Timestamp sendAt, Timestamp receiveAt, String title, String content) {
+    public RecvMessage(Long sendUserId, Long recvUserId, String title, String content) {
         this.sendUserId = sendUserId;
         this.recvUserId = recvUserId;
-        this.sendAt = sendAt;
-        this.receiveAt = receiveAt;
         this.title = title;
         this.content = content;
     }

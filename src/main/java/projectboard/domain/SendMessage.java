@@ -30,11 +30,9 @@ public class SendMessage {
     private String content;
 
     @Builder
-    public SendMessage(Long sendUserId, Long recvUserId, Timestamp sendAt, Timestamp receiveAt, int checked, String title, String content) {
+    public SendMessage(Long sendUserId, Long recvUserId, int checked, String title, String content) {
         this.sendUserId = sendUserId;
         this.recvUserId = recvUserId;
-        this.sendAt = sendAt;
-        this.receiveAt = receiveAt;
         this.checked = checked;
         this.title = title;
         this.content = content;
