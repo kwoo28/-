@@ -3,7 +3,7 @@ package projectboard.domain;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -20,7 +20,7 @@ public class User {
     @ApiModelProperty(example = "유저 이메일")
     private String email;
     @ApiModelProperty(example = "유저 생성 일자")
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
     @Builder
     public User(String userId, String userPw, String userName, String email) {

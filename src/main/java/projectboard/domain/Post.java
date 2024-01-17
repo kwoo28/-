@@ -3,7 +3,7 @@ package projectboard.domain;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -19,7 +19,7 @@ public class Post {
     @ApiModelProperty(example = "게시글 해시 태그")
     private String hashTag;
     @ApiModelProperty(example = "게시글 생성 일자")
-    private LocalDateTime createdAt;
+    private Timestamp createdAt;
 
 
     @Builder
