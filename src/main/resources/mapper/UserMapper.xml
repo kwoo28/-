@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="projectboard.repository.UserMapper">
+    <!--자바와 db의 필드명을 맞추기 위해 resultMap 사용-->
+    <resultMap type="projectboard.domain.user" id="user">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userPw" column="user_pw"/>
+        <result property="userName" column="user_name"/>
+        <result property="email" column="email"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="createUser" useGeneratedKeys="true" keyProperty="id" parameterType="projectboard.domain.user">
+        insert into board (user_id, user_pw, user_name, email, created_at) values(#{user_id}, #{user_pw}, #{user_name}, #{email}, #{created_at})
+    </insert>
+
+    <update id="updateUser" parameterType="projectboard.domain.user">
+        update user set user_id=#{user_id},
+                        user_pw=#{user_pw},
+                        user_name=#{user_name},
+                        email=#{emial},
+                        created_at=#{created_at}
+    </update>
+
+    <delete id="deleteUser" parameterType="Long">
+        delete from user where id = #{id}
+    </delete>
+
+    <select id="findUserById" parameterType="Long" resultType="projectboard.domain.user">
+        select * from user where id = #{id}
+    </select>
+
+    <select id="findUserByUserId" parameterType="String" resultType="projectboard.domain.user">
+        select * from user where user_id=#{user_id}
+    </select>
+
+    <select id="findUserByUserName" parameterType="String" resultType="projectboard.domain.user">
+        select * from user where user_name=#{user_name}
+    </select>
+
+    <select id="findUserByEmail" parameterType="String" resultType="projectboard.domain.user">
+        select * from user where email=#{email}
+    </select>
+
+    <select id="findAllUser" resultType="projectboard.domain.user">
+        select * from user
+    </select>
+
+</mapper>
