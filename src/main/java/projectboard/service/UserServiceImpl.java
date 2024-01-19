@@ -1,8 +1,8 @@
 package projectboard.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 import projectboard.domain.User;
 import projectboard.repository.UserMapper;
 
@@ -50,7 +50,9 @@ public class UserServiceImpl implements UserService{
         checkDuplicatedUserName(user.getUserName());
         checkDuplicatedEmail(user.getEmail());
 
-        user.setCreatedAt((Timestamp) new Date());
+        Date date = new Date();
+        long time = date.getTime();
+        user.setCreatedAt(new Timestamp(time));
         userMapper.createUser(user);
 
         return user;
@@ -58,10 +60,10 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findByUserId(String userId) {
-        /*
+
         if(userMapper.findUserByUserId(userId)==null){
-            throw new NotFoundException("");
-        }*/
+            throw new IllegalArgumentException("회원 식별 id를 찾을 수 없습니다.");
+        }
 
         return userMapper.findUserByUserId(userId);
     }
@@ -82,7 +84,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User updateUser(Long id, User user) {
+    public User updateUser(Long id, User user) throws NotFoundException {
         if(userMapper.findUserById(id)==null){
             throw new NotFoundException("");
         }
@@ -94,15 +96,11 @@ public class UserServiceImpl implements UserService{
         user.setCreatedAt((Timestamp) new Date());
         userMapper.updateUser(user);
 
-        return user;
+        return userMapper.findUserById(id);
     }
 
     @Override
     public void deleteUser(Long id) {
-        /*
-        if(userMapper.findUserById(id)==null){
-            throw new NotFoundException("");
-        }*/
         userMapper.deleteUser(id);
     }
 
