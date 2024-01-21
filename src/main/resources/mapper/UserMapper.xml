@@ -26,11 +26,10 @@
     </insert>
 
     <update id="updateUser" parameterType="projectboard.domain.User">
-        update user set user_id=#{user.userId},
-                        user_pw=#{user.userPw},
+        update user set user_pw=#{user.userPw},
                         user_name=#{user.userName},
-                        email=#{user.email},
-                        created_at=#{user.createdAt}
+                        email=#{user.email}
+                    where id = #{user.id}
     </update>
 
     <delete id="deleteUser" parameterType="Long">

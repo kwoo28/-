@@ -2,16 +2,18 @@ package projectboard.service;
 
 import org.apache.ibatis.javassist.NotFoundException;
 import projectboard.domain.User;
+import projectboard.dto.user.UpdateUserReqDto;
 
 import java.util.List;
 
 public interface UserService {
-    User createUser(User user);
+    void createUser(User user);
+    User findById(Long id);
     User findByUserId(String userId);
     User findByUserName(String userName);
     User findByEmail(String email);
     List<User> findAllUser();
-    User updateUser(Long id, User user) throws NotFoundException;
+    void updateUser(User user);
     void deleteUser(Long id);
-    boolean login(String userId, String userPw);
+    void login(String userId, String userPw);
 }
