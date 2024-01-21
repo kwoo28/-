@@ -29,11 +29,13 @@ public class Message {
     private String content;
 
     @Builder
-    public Message(Long sendId, Long recvId, Timestamp sendAt, Timestamp recvAt, String title, String content) {
+    public Message(Long id, Long sendId, Long recvId, Timestamp sendAt, Timestamp recvAt, int checked, String title, String content) {
+        this.id = id;
         this.sendId = sendId;
         this.recvId = recvId;
         this.sendAt = sendAt;
         this.recvAt = recvAt;
+        this.checked = checked;
         this.title = title;
         this.content = content;
     }

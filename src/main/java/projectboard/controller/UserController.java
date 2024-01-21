@@ -51,7 +51,7 @@ public class UserController {
         }catch (Exception e) {
             log.error("[UserController createUser]", e);
             createUserResDto.setCode(ResCode.UNKNOWN.value());
-            createUserResDto.setMessage(e.getLocalizedMessage());
+            createUserResDto.setMessage(e.getMessage());
             httpStatus = HttpStatus.BAD_REQUEST;
         }
 

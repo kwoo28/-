@@ -35,56 +35,45 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findById(Long id) {
         User findUser = userMapper.findUserById(id);
-
         if(findUser==null){
             throw new NoSuchDataException("No such data exist");
         }
-
         return findUser;
     }
 
     @Override
     public User findByUserId(String userId) {
-
         User findUser = userMapper.findUserByUserId(userId);
-
         if(findUser==null){
             throw new NoSuchDataException("No such data exist");
         }
-
         return findUser;
     }
 
     @Override
     public User findByUserName(String userName) {
         User findUser = userMapper.findUserByUserName(userName);
-
         if(findUser==null){
             throw new NoSuchDataException("No such data exist");
         }
-
         return findUser;
     }
 
     @Override
     public User findByEmail(String email) {
         User findUser = userMapper.findUserByEmail(email);
-
         if(findUser==null){
             throw new NoSuchDataException("No such data exist");
         }
-
         return findUser;
     }
 
     @Override
     public List<User> findAllUser() {
         List<User> findUser = userMapper.findAllUser();
-
         if(findUser==null){
             throw new NoSuchDataException("No such data exists");
         }
-
         return findUser;
     }
 
