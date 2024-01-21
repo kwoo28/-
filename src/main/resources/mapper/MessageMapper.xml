@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="projectboard.repository.MessageMapper">
+    <!--db와 자바의 필드명을 맞추기위해-->
+    <resultMap type="projectboard.domain.Message" id="MessageMap">
+        <id property="id" column="id"/>
+        <result property="sendId" column="send_id"/>
+        <result property="recvId" column="recv_id"/>
+        <result property="sendAt" column="send_at"/>
+        <result property="recvAt" column="recv_at"/>
+        <result property="checked" column="checked"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+    </resultMap>
+
+    <insert id="createMessage" useGeneratedKeys="true" keyProperty="id" parameterType="projectboard.domain.Message">
+        insert into message (send_id, recv_id, send_at, title, content)
+        values(
+                  #{message.sendId},
+                  #{message.recvId},
+                  #{message.sendAt},
+                  #{message.title},
+                  #{message.content}
+              )
+    </insert>
+
+    <delete id="deleteMessage" parameterType="Long">
+        delete from message where id = #{id}
+    </delete>
+
+    <select id="findMessageById" parameterType="Long" resultType="projectboard.domain.Message" resultMap="MessageMap">
+        select * from message where id = #{id}
+    </select>
+
+    <select id="findMessageBySendId" parameterType="Long" resultType="projectboard.domain.Message" resultMap="MessageMap">
+        select * from message where send_id = #{sendId}
+    </select>
+
+    <select id="findMessageByRecvId" parameterType="Long" resultType="projectboard.domain.Message" resultMap="MessageMap">
+        select * from message where recv_id = #{recvId}
+    </select>
+
+    <update id="readMessage" parameterType="Long">
+        update message set checked = 1,
+                           recv_at = CURRENT_TIMESTAMP where id = #{id}
+    </update>
+
+</mapper>
