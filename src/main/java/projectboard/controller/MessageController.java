@@ -1,6 +1,7 @@
 package projectboard.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,12 +19,13 @@ import projectboard.service.MessageService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/message")
+@Tag(name = "쪽지 API", description = "간단한 쪽지 기능 API")
 public class MessageController {
 
     private final MessageService messageService;
 
     @PostMapping
-    @ApiOperation("쪽지생성")
+    @Operation(summary = "쪽지생성")
     public ResponseEntity<CreateMessageResDto> createMessage(@RequestBody CreateMessageReqDto createMessageReqDto){
 
         CreateMessageResDto createMessageResDto = new CreateMessageResDto();
@@ -53,7 +55,7 @@ public class MessageController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation("편지 조회")
+    @Operation(summary = "편지 조회")
     public ResponseEntity<FindMessageResDto> findMessageById(@PathVariable("id") Long id){
         FindMessageResDto findMessageResDto = new FindMessageResDto();
         HttpStatus httpStatus = HttpStatus.OK;
@@ -74,7 +76,7 @@ public class MessageController {
     }
 
     @GetMapping("/send-message/{sendId}")
-    @ApiOperation("보낸편지함")
+    @Operation(summary = "보낸편지함")
     public ResponseEntity<FindMessageListResDto> findMessageBySendId(@PathVariable("sendId") Long sendId){
 
         FindMessageListResDto findMessageListResDto = new FindMessageListResDto();
@@ -96,7 +98,7 @@ public class MessageController {
     }
 
     @GetMapping("/recv-message/{recvId}")
-    @ApiOperation("받은편지함")
+    @Operation(summary = "받은편지함")
     public ResponseEntity<FindMessageListResDto> findMessageByRecvId(@PathVariable("recvId") Long recvId){
 
         FindMessageListResDto findMessageListResDto = new FindMessageListResDto();
@@ -118,7 +120,7 @@ public class MessageController {
     }
 
     @PatchMapping("/{id}")
-    @ApiOperation("쪽지 읽음 처리")
+    @Operation(summary = "쪽지 읽음 처리")
     public ResponseEntity<CheckMessageResDto> checkMessageById(@PathVariable("id") Long id){
         CheckMessageResDto checkMessageResDto = new CheckMessageResDto();
         HttpStatus httpStatus = HttpStatus.OK;
