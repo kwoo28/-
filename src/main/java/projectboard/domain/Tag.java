@@ -1,14 +1,14 @@
 package projectboard.domain;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Getter @Setter
 @NoArgsConstructor
 public class Tag {
-    @ApiModelProperty(example = "해시태그 고유 번호")
+    @Schema(example = "해시태그 고유 번호")
     private Long id;
-    @ApiModelProperty(example = "해시태그 이름")
+    @Schema(example = "해시태그 이름")
     private String name;
 
     @Builder

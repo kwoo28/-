@@ -1,6 +1,6 @@
 package projectboard.domain;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -8,15 +8,15 @@ import java.sql.Timestamp;
 @Getter @Setter
 @NoArgsConstructor
 public class Comment {
-    @ApiModelProperty(example = "댓글 고유 번호")
+    @Schema(example = "댓글 고유 번호")
     private Long id;
-    @ApiModelProperty(example = "게시글 고유 번호")
+    @Schema(example = "게시글 고유 번호")
     private Long postId;
-    @ApiModelProperty(example = "유저 고유 번호")
+    @Schema(example = "유저 고유 번호")
     private Long userId;
-    @ApiModelProperty(example = "댓글 내용")
+    @Schema(example = "댓글 내용")
     private String content;
-    @ApiModelProperty(example = "댓글 생성 일자")
+    @Schema(example = "댓글 생성 일자")
     private Timestamp createdAt;
 
     @Builder

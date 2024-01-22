@@ -1,32 +1,24 @@
 package projectboard.config;
 
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import org.springframework.context.annotation.Configuration;
 
-//https://velog.io/@kjgi73k/Springboot3%EC%97%90-Swagger3%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0
-@EnableSwagger2
+@Configuration
 public class SwaggerConfig {
     @Bean
-    public Docket api(){
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build();
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .components(new Components())
+                .info(apiInfo());
     }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("project_board_API_Document")
-                .description("API 설명")
-                .version("1.0.0")
-                .build();
+    private Info apiInfo() {
+        return new Info()
+                .title("Springdoc 게시판")
+                .description("Springdoc을 사용한 게시판 API")
+                .version("1.0.0");
     }
 }

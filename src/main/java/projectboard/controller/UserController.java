@@ -1,6 +1,7 @@
 package projectboard.controller;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,12 +19,13 @@ import projectboard.service.UserService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@Tag(name = "회원 API", description = "기본적인 회원 CRUD API")
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping
-    @ApiOperation(value = "회원가입")
+    @Operation(summary = "회원가입", description = "json형태로 받은 데이터로 회원가입합니다.")
     public ResponseEntity<CreateUserResDto> createUser(@RequestBody CreateUserReqDto createUserReqDto){
 
         CreateUserResDto createUserResDto = new CreateUserResDto();
@@ -59,7 +61,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "회원 수정")
+    @Operation(summary = "회원수정", description = "회원 고유 id와 json형태로 받은 데이터로 수정합니다.")
     public ResponseEntity<UpdateUserResDto> updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserReqDto updateUserReqDto){
 
         UpdateUserResDto updateUserResDto = new UpdateUserResDto();
@@ -96,7 +98,7 @@ public class UserController {
     }
 
     @GetMapping("/userId/{userId}")
-    @ApiOperation(value = "회원아이디 조회")
+    @Operation(summary = "회원 아이디 조회", description = "회원 아이디로 받은 데이터로 조회합니다.")
     public ResponseEntity<FindUserResDto> findByUserId(@PathVariable("userId") String userId){
 
         FindUserResDto findUserResDto = new FindUserResDto();
@@ -118,7 +120,7 @@ public class UserController {
     }
 
     @GetMapping("/userName/{userName}")
-    @ApiOperation(value = "회원이름 조회")
+    @Operation(summary = "회원 이름 조회", description = "회원 이름으로 받은 데이터로 조회합니다.")
     public ResponseEntity<FindUserResDto> findByUserName(@PathVariable("userName") String userName){
 
         FindUserResDto findUserResDto = new FindUserResDto();
@@ -140,7 +142,7 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
-    @ApiOperation(value = "회원 이메일 조회")
+    @Operation(summary = "회원 이메일 조회", description = "회원 이메일로 받은 데이터로 조회합니다.")
     public ResponseEntity<FindUserResDto> findByEmail(@PathVariable("email") String email){
         FindUserResDto findUserResDto = new FindUserResDto();
         HttpStatus httpStatus = HttpStatus.OK;
@@ -161,7 +163,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "회원 탈퇴")
+    @Operation(summary = "회원 삭제", description = "회원 고유 id로 받은 데이터로 삭제합니다.")
     public ResponseEntity<DeleteUserResDto> deleteUser(@PathVariable("id") Long id){
         DeleteUserResDto deleteUserRespDto = new DeleteUserResDto();
         HttpStatus httpStatus = HttpStatus.OK;
@@ -183,7 +185,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @ApiOperation(value = "회원 로그인")
+    @Operation(summary = "로그인", description = "회원아이디와 비밀번호로 로그인합니다.")
     public ResponseEntity<LoginResDto> login(@RequestBody LoginReqDto loginReqDto){
 
         LoginResDto loginResDto = new LoginResDto();
