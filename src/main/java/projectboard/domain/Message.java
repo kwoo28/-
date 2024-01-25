@@ -1,15 +1,16 @@
 package projectboard.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import projectboard.dto.message.CreateMessageReqDto;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
-@Getter @Setter
-@NoArgsConstructor
+@Getter
+@AllArgsConstructor
 public class Message {
     @Schema(example = "쪽지 고유 번호")
     private Long id;
@@ -28,15 +29,14 @@ public class Message {
     @Schema(example = "쪽지 내용")
     private String content;
 
-    @Builder
-    public Message(Long id, Long sendId, Long recvId, Timestamp sendAt, Timestamp recvAt, int checked, String title, String content) {
-        this.id = id;
-        this.sendId = sendId;
-        this.recvId = recvId;
-        this.sendAt = sendAt;
-        this.recvAt = recvAt;
-        this.checked = checked;
-        this.title = title;
-        this.content = content;
+    public Message(CreateMessageReqDto createMessageReqDto) {
+        Date date = new Date();
+        long time = date.getTime();
+
+        this.sendId = createMessageReqDto.getSendId();
+        this.recvId = createMessageReqDto.getRecvId();
+        this.sendAt = new Timestamp(time);
+        this.title = createMessageReqDto.getTitle();
+        this.content = createMessageReqDto.getContent();
     }
 }

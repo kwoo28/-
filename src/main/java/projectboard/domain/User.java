@@ -2,11 +2,14 @@ package projectboard.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import projectboard.dto.user.CreateUserReqDto;
+import projectboard.dto.user.UpdateUserReqDto;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
-@Getter @Setter
-@NoArgsConstructor
+@Getter
+@AllArgsConstructor
 public class User {
     @Schema(example = "유저 고유 번호")
     private Long id;
@@ -21,11 +24,20 @@ public class User {
     @Schema(example = "유저 생성 일자")
     private Timestamp createdAt;
 
-    @Builder
-    public User(String userId, String userPw, String userName, String email) {
-        this.userId = userId;
-        this.userPw = userPw;
-        this.userName = userName;
-        this.email = email;
+    public User(UpdateUserReqDto updateUserReqDto) {
+        this.userPw = updateUserReqDto.getUserPw();
+        this.userName = updateUserReqDto.getUserName();
+        this.email = updateUserReqDto.getEmail();
+    }
+
+    public User(CreateUserReqDto createUserReqDto) {
+        Date date = new Date();
+        long time = date.getTime();
+
+        this.userId = createUserReqDto.getUserId();
+        this.userPw = createUserReqDto.getUserPw();
+        this.userName = createUserReqDto.getUserName();
+        this.email = createUserReqDto.getEmail();
+        this.createdAt = new Timestamp(time);
     }
 }

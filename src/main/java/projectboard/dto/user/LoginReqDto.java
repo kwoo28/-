@@ -1,12 +1,13 @@
 package projectboard.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-// 널 값의 속성은 포함하지 않음
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoginReqDto {
+    @NotBlank(message = "아이디를 입력해주세요.")
     private String userId;
+    @NotBlank(message = "비밀번호를 입력해주세요.")
     private String userPw;
 }
