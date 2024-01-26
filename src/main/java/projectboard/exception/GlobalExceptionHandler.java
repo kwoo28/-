@@ -97,8 +97,28 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = { MessageNotFoundException.class })
     protected ResponseEntity<ErrorResponse> handleMessageNotFoundException(MessageNotFoundException e) {
-        log.error("MessageNotFoundException = {}",e.getMessage());
+        log.error("handleMessageNotFoundException = {}",e.getMessage());
         ErrorResponse response = new ErrorResponse(ErrorCode.MESSAGE_NOT_FOUND);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    /**
+     * 게시글 정보를 찾지 못했을때 발생
+     */
+    @ExceptionHandler(value = { PostNotFoundException.class })
+    protected ResponseEntity<ErrorResponse> handlePostNotFoundException(PostNotFoundException e) {
+        log.error("handlePostNotFoundException = {}",e.getMessage());
+        ErrorResponse response = new ErrorResponse(ErrorCode.POST_NOT_FOUND);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    /**
+     * 태그 정보를 찾지 못했을때 발생
+     */
+    @ExceptionHandler(value = { TagNotFoundException.class })
+    protected ResponseEntity<ErrorResponse> handleTagNotFoundException(TagNotFoundException e) {
+        log.error("handleTagNotFoundException = {}",e.getMessage());
+        ErrorResponse response = new ErrorResponse(ErrorCode.TAG_NOT_FOUND);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
