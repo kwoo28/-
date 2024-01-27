@@ -23,6 +23,7 @@ public enum ErrorCode {
     MESSAGE_NOT_FOUND(404,"NOT_FOUND","해당 쪽지를 찾을 수 없습니다."),
     POST_NOT_FOUND(404,"NOT_FOUND","해당 게시글을 찾을 수 없습니다."),
     TAG_NOT_FOUND(404,"NOT_FOUND","해당 태그를 찾을 수 없습니다."),
+    COMMENT_NOT_FOUND(404,"NOT_FOUND","해당 댓글을 찾을 수 없습니다."),
     RESOURCE_NOT_FOUND(404, "NOT_FOUND","해당 정보를 찾을 수 없습니다."),
 
     /* 405 METHOD_NOT_ALLOWED : 지원하지 않는 HTTP Method */

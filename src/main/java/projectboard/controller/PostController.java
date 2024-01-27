@@ -7,10 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import projectboard.domain.Post;
-import projectboard.domain.User;
 import projectboard.dto.post.CreatePostReqDto;
 import projectboard.dto.post.UpdatePostDto;
-import projectboard.dto.user.UpdateUserReqDto;
 import projectboard.service.PostService;
 
 import java.util.List;

@@ -123,6 +123,16 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 댓글 정보를 찾지 못했을때 발생
+     */
+    @ExceptionHandler(value = { CommentNotFoundException.class })
+    protected ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException e) {
+        log.error("handleCommentNotFoundException = {}",e.getMessage());
+        ErrorResponse response = new ErrorResponse(ErrorCode.COMMENT_NOT_FOUND);
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+
+    /**
      * 위에 해당하는 예외에 해당하지 않을 때 모든 예외를 처리하는 메소드
      */
     @ExceptionHandler(Exception.class)

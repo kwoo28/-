@@ -1,7 +1,6 @@
 package projectboard.service;
 
 import projectboard.domain.Post;
-import projectboard.domain.Tag;
 
 import java.util.List;
 

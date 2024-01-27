@@ -23,9 +23,9 @@
     </insert>
 
     <update id="updatePost" parameterType="projectboard.domain.Post">
-        update post set title=#{board.title},
-                        content=#{board.content}
-        where id = #{board.id}
+        update post set title=#{post.title},
+                        content=#{post.content}
+        where id = #{post.id}
     </update>
 
     <delete id="deletePost" parameterType="Long">

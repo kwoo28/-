@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import projectboard.domain.*;
-import projectboard.exception.MessageNotFoundException;
 import projectboard.exception.PostNotFoundException;
 import projectboard.exception.TagNotFoundException;
 import projectboard.exception.UserNotFoundException;
@@ -14,7 +13,6 @@ import projectboard.repository.TagMapper;
 import projectboard.repository.UserMapper;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +27,9 @@ public class PostServiceImpl implements PostService{
     @Override
     public void createPost(Post post, List<String> tagNames) {
 
+        if(userMapper.findUserById(post.getUserId())==null){
+            throw new UserNotFoundException("해당 유저 없음");
+        }
         //게시글 생성
         postMapper.createPost(post);
         Long postId = post.getId();

@@ -2,11 +2,12 @@ package projectboard.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import projectboard.dto.comment.CreateCommentReqDto;
 
 import java.sql.Timestamp;
 
-@Getter @Setter
-@NoArgsConstructor
+@Getter
+@AllArgsConstructor
 public class Comment {
     @Schema(example = "댓글 고유 번호")
     private Long id;
@@ -20,9 +21,14 @@ public class Comment {
     private Timestamp createdAt;
 
     @Builder
-    public Comment(Long postId, Long userId, String content) {
-        this.postId = postId;
-        this.userId = userId;
+    public Comment(Long id, String content){
+        this.id = id;
         this.content = content;
+    }
+
+    public Comment(CreateCommentReqDto createCommentReqDto) {
+        this.postId = createCommentReqDto.getPostId();
+        this.userId = createCommentReqDto.getUserId();
+        this.content = createCommentReqDto.getContent();
     }
 }
