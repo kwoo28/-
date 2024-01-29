@@ -28,11 +28,15 @@ public class UserController {
         userService.createUser(createUserReqDto);
     }
 
+    /**
+     * 일단은 회원 수정만 jwt 인증을 이용하여 id값 추출
+     */
     @PutMapping
     @Operation(summary = "회원수정", description = "회원 고유 id와 json형태로 받은 데이터로 수정합니다.",
             security = { @SecurityRequirement(name = "bearer-jwt") })
     public void updateUser(Authentication authentication, @RequestBody UpdateUserReqDto updateUserReqDto){
-        userService.updateUser(Long.valueOf(authentication.getName()), updateUserReqDto);
+        Long userId = Long.parseLong(authentication.getName());
+        userService.updateUser(userId, updateUserReqDto);
     }
 
     @GetMapping("/userId/{userId}")

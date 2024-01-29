@@ -12,7 +12,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-import projectboard.service.UserService;
 import projectboard.util.JwtUtil;
 
 import java.io.IOException;
@@ -21,14 +20,13 @@ import java.util.List;
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final UserService userService;
     private final String secretKey;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-        log.info("authorization : {}", authorization);
+        log.info("authorization의 토큰으로 접근합니다. : {}", authorization);
 
         if(authorization == null || !authorization.startsWith("Bearer ")){
             log.error("authorization을 잘못 보냈습니다..");
@@ -47,14 +45,14 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         //userId Token에서 꺼내기
-        String  userId = JwtUtil.getUserId(token, secretKey);
-        log.info("userId : {}", userId);
+        Long userId = JwtUtil.getUserId(token, secretKey);
+        log.info("userId을 꺼냅니다. : {}", userId);
 
         //권한 부여
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userId, null, List.of(new SimpleGrantedAuthority("USER")));
 
-        //Detail을 넣어줍니다.
+        //Detail을 넣음.
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);

@@ -1,6 +1,7 @@
 package projectboard.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import projectboard.util.JwtUtil;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService{
 
         User user = User.builder().
                 id(id).
-                userPw(updateUserReqDto.getUserPw()).
+                userPw(encoder.encode(updateUserReqDto.getUserPw())).
                 userName(updateUserReqDto.getUserName()).
                 email(updateUserReqDto.getEmail()).
                 build();
@@ -112,7 +114,9 @@ public class UserServiceImpl implements UserService{
             throw new UserNotFoundException("로그인 실패했습니다.");
         }
 
-        String token = JwtUtil.createJwt(userId, key, expireTimsMs);
+        String token = JwtUtil.createJwt(findUser.getId(), key, expireTimsMs);
+        log.info("userId님이 로그인합니다. : {}", findUser.getId());
+        log.info("token : {}", token);
 
         return token;
     }
