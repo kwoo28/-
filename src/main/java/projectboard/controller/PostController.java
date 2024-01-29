@@ -1,6 +1,7 @@
 package projectboard.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,21 +24,24 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    @Operation(summary = "게시글생성", description = "json형태로 받은 데이터로 게시글 생성합니다.")
+    @Operation(summary = "게시글생성", description = "json형태로 받은 데이터로 게시글 생성합니다.",
+            security = { @SecurityRequirement(name = "bearer-jwt") })
     public void createUser(@Valid @RequestBody CreatePostReqDto createPostReqDto){
         Post post = new Post(createPostReqDto);
         postService.createPost(post, createPostReqDto.getTagNames());
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "게시글 수정", description = "게시글 고유 id와 json형태로 받은 데이터로 수정합니다.")
+    @Operation(summary = "게시글 수정", description = "게시글 고유 id와 json형태로 받은 데이터로 수정합니다.",
+            security = { @SecurityRequirement(name = "bearer-jwt") })
     public void updateUser(@PathVariable("id") Long id, @RequestBody UpdatePostDto updatePostDto){
         Post post = new Post(updatePostDto);
         postService.updatePost(post);
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "게시글 삭제", description = "게시글 고유 id로 받은 데이터로 삭제합니다.")
+    @Operation(summary = "게시글 삭제", description = "게시글 고유 id로 받은 데이터로 삭제합니다.",
+            security = { @SecurityRequirement(name = "bearer-jwt") })
     public void deleteUser(@PathVariable("id") Long id){
         postService.deletePost(id);
     }

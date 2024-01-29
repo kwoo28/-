@@ -1,10 +1,12 @@
 package projectboard.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import projectboard.domain.User;
 import projectboard.dto.user.*;
@@ -20,18 +22,17 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/join")
     @Operation(summary = "회원가입", description = "json형태로 받은 데이터로 회원가입합니다.")
     public void createUser(@Valid @RequestBody CreateUserReqDto createUserReqDto){
-        User user = new User(createUserReqDto);
-        userService.createUser(user);
+        userService.createUser(createUserReqDto);
     }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "회원수정", description = "회원 고유 id와 json형태로 받은 데이터로 수정합니다.")
-    public void updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserReqDto updateUserReqDto){
-        User user = new User(updateUserReqDto);
-        userService.updateUser(user);
+    @PutMapping
+    @Operation(summary = "회원수정", description = "회원 고유 id와 json형태로 받은 데이터로 수정합니다.",
+            security = { @SecurityRequirement(name = "bearer-jwt") })
+    public void updateUser(Authentication authentication, @RequestBody UpdateUserReqDto updateUserReqDto){
+        userService.updateUser(Long.valueOf(authentication.getName()), updateUserReqDto);
     }
 
     @GetMapping("/userId/{userId}")
@@ -53,14 +54,15 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "회원 삭제", description = "회원 고유 id로 받은 데이터로 삭제합니다.")
+    @Operation(summary = "회원 삭제", description = "회원 고유 id로 받은 데이터로 삭제합니다.",
+            security = { @SecurityRequirement(name = "bearer-jwt") })
     public void deleteUser(@PathVariable("id") Long id){
         userService.deleteUser(id);
     }
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "회원아이디와 비밀번호로 로그인합니다.")
-    public void login(@Valid @RequestBody LoginReqDto loginReqDto){
-        userService.login(loginReqDto.getUserId(), loginReqDto.getUserPw());
+    public String login(@Valid @RequestBody LoginReqDto loginReqDto){
+        return userService.login(loginReqDto.getUserId(), loginReqDto.getUserPw());
     }
 }

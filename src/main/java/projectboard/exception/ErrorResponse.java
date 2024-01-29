@@ -8,19 +8,19 @@ import java.util.List;
 
 /**
  * {
- *     "timestamp": "2022-08-16T11:00:00.123456",
- *     "status": 400,
- *     "error": "BAD_REQUEST",
- *     "code": "INVALID_INPUT_VALUE",
- *     "message": "입력값이 올바르지 않습니다."
+ *     "timestamp": "2024-01-29T11:00:00.123456",
+ *     "status": 404,
+ *     "error": "NOT_FOUND",
+ *     "code": "USER_NOT_FOUND",
+ *     "message": "해당 유저 정보를 찾을 수 없습니다."
  *     "validation": [
  *        {
  *            "field": "name"
- *            "message": "이름을 입력해주세요."
+ *            "message": "아이디를 입력해주세요."
  *        },
  *        {
- *            "field": "age"
- *            "message": "나이는 10 ~ 30살 이어야 합니다."
+ *            "field": "email"
+ *            "message": "이메일을 입력해주세요."
  *        }
  *     ],
  * }
@@ -52,6 +52,9 @@ public class ErrorResponse {
         this.code = errorCode.getCode();
     }
 
+    /**
+     * Validation을 통해 바인딩을 하지 못했을때 아래와 같은 생성자를 통해 필드와 메시지를 출력
+     */
     public ErrorResponse(ErrorCode errorCode, List<FieldError> errors) {
         this.message = errorCode.getMessage();
         this.status = errorCode.getStatus();

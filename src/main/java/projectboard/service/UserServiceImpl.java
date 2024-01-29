@@ -1,10 +1,15 @@
 package projectboard.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import projectboard.domain.User;
+import projectboard.dto.user.CreateUserReqDto;
+import projectboard.dto.user.UpdateUserReqDto;
 import projectboard.exception.UserNotFoundException;
 import projectboard.repository.UserMapper;
+import projectboard.util.JwtUtil;
 
 import java.util.List;
 
@@ -13,14 +18,38 @@ import java.util.List;
 public class UserServiceImpl implements UserService{
 
     private final UserMapper userMapper;
+    private final BCryptPasswordEncoder encoder;
+    @Value("${jwt.secret}")
+    private String key;
+    private Long expireTimsMs = 1000 * 60 * 60l;
 
     @Override
-    public void createUser(User user) {
+    public void createUser(CreateUserReqDto createUserReqDto) {
+
+        User user = User.builder().
+                userId(createUserReqDto.getUserId()).
+                userPw(encoder.encode(createUserReqDto.getUserPw())).
+                userName(createUserReqDto.getUserName()).
+                email(createUserReqDto.getEmail()).
+                build();
+
         userMapper.createUser(user);
     }
 
     @Override
-    public void updateUser(User user) {
+    public void updateUser(Long id, UpdateUserReqDto updateUserReqDto) {
+
+        if(userMapper.findUserById(id)==null){
+            throw new UserNotFoundException("해당 유저 없음");
+        }
+
+        User user = User.builder().
+                id(id).
+                userPw(updateUserReqDto.getUserPw()).
+                userName(updateUserReqDto.getUserName()).
+                email(updateUserReqDto.getEmail()).
+                build();
+
         userMapper.updateUser(user);
     }
 
@@ -75,12 +104,16 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void login(String userId, String userPw) {
+    public String login(String userId, String userPw) {
 
         User findUser = userMapper.findUserByUserId(userId);
 
-        if((findUser==null) || !(findUser.getUserPw().equals(userPw))){
+        if((findUser==null) || !encoder.matches(userPw, findUser.getUserPw())){
             throw new UserNotFoundException("로그인 실패했습니다.");
         }
+
+        String token = JwtUtil.createJwt(userId, key, expireTimsMs);
+
+        return token;
     }
 }
