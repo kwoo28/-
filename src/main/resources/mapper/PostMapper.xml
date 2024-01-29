@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="projectboard.repository.PostMapper">
+
+    <!--db와 자바의 필드명을 맞추기위해-->
+    <resultMap type="projectboard.domain.Post" id="postMap">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="createPost" useGeneratedKeys="true" keyProperty="id" parameterType="projectboard.domain.Post">
+        insert into post (user_id, title, content)
+        values(
+                  #{post.userId},
+                  #{post.title},
+                  #{post.content}
+              )
+    </insert>
+
+    <update id="updatePost" parameterType="projectboard.domain.Post">
+        update post set title=#{post.title},
+                        content=#{post.content}
+        where id = #{post.id}
+    </update>
+
+    <delete id="deletePost" parameterType="Long">
+        delete from post where id = #{id}
+    </delete>
+
+    <select id="findPostById" parameterType="Long" resultType="projectboard.domain.Post" resultMap="postMap">
+        select * from post where id = #{id}
+    </select>
+
+    <select id="findPostByTitle" parameterType="String" resultType="projectboard.domain.Post" resultMap="postMap">
+        select * from post where title like CONCAT('%', #{title}, '%')
+    </select>
+
+    <select id="findPostByContent" parameterType="String" resultType="projectboard.domain.Post" resultMap="postMap">
+        select * from post where content like CONCAT('%', #{content}, '%')
+    </select>
+
+    <select id="findPostByTagId" parameterType="Long" resultType="projectboard.domain.Post" resultMap="postMap">
+        SELECT post.*
+        FROM post_tag
+                 JOIN post ON post.id = post_tag.post_id
+        WHERE post_tag.tag_id = #{tagId}
+    </select>
+
+    <select id="findPostByUserId" resultType="projectboard.domain.Post">
+        select * from post where user_id = #{id}
+    </select>
+
+</mapper>
