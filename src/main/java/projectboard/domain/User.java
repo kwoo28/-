@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class User {
     @Schema(example = "유저 고유 번호")

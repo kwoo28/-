@@ -16,11 +16,10 @@
     </resultMap>
 
     <insert id="createMessage" useGeneratedKeys="true" keyProperty="id" parameterType="projectboard.domain.Message">
-        insert into message (send_id, recv_id, send_at, title, content)
+        insert into message (send_id, recv_id, title, content)
         values(
                   #{message.sendId},
                   #{message.recvId},
-                  #{message.sendAt},
                   #{message.title},
                   #{message.content}
               )

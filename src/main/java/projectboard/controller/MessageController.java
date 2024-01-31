@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import projectboard.domain.Message;
 import projectboard.dto.message.*;
@@ -24,26 +25,26 @@ public class MessageController {
 
     @PostMapping
     @Operation(summary = "쪽지생성", security = { @SecurityRequirement(name = "bearer-jwt") })
-    public void createMessage(@Valid @RequestBody CreateMessageReqDto createMessageReqDto){
-        Message message = new Message(createMessageReqDto);
-        messageService.createMessage(message);
+    public void createMessage(Authentication authentication, @Valid @RequestBody CreateMessageReqDto createMessageReqDto){
+
+        Long sendId = Long.parseLong(authentication.getName());
+
+        messageService.createMessage(sendId, createMessageReqDto);
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "편지 조회", security = { @SecurityRequirement(name = "bearer-jwt") })
-    public Message findMessageById(@PathVariable("id") Long id){
-        return messageService.findMessageById(id);
-    }
-
-    @GetMapping("/send-message/{sendId}")
+    @GetMapping("/send-message")
     @Operation(summary = "보낸편지함", security = { @SecurityRequirement(name = "bearer-jwt") })
-    public List<Message> findMessageBySendId(@PathVariable("sendId") Long sendId){
+    public List<Message> findMessageBySendId(Authentication authentication){
+
+        Long sendId = Long.parseLong(authentication.getName());
         return messageService.findMessageBySendId(sendId);
     }
 
-    @GetMapping("/recv-message/{recvId}")
+    @GetMapping("/recv-message")
     @Operation(summary = "받은편지함", security = { @SecurityRequirement(name = "bearer-jwt") })
-    public List<Message> findMessageByRecvId(@PathVariable("recvId") Long recvId){
+    public List<Message> findMessageByRecvId(Authentication authentication){
+
+        Long recvId = Long.parseLong(authentication.getName());
         return messageService.findMessageByRecvId(recvId);
     }
 

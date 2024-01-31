@@ -6,9 +6,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import projectboard.domain.Comment;
 import projectboard.dto.comment.CreateCommentReqDto;
+import projectboard.dto.comment.UpdateCommentReqDto;
 import projectboard.service.CommentService;
 
 import java.util.List;
@@ -25,21 +27,18 @@ public class CommentController {
     @PostMapping
     @Operation(summary = "댓글생성", description = "json형태로 받은 데이터로 댓글 생성합니다.",
             security = { @SecurityRequirement(name = "bearer-jwt") })
-    public void createUser(@Valid @RequestBody CreateCommentReqDto createPostReqDto) {
-        Comment comment = new Comment(createPostReqDto);
-        commentService.createComment(comment);
+    public void createUser(Authentication authentication, @Valid @RequestBody CreateCommentReqDto createCommentReqDto) {
+
+        Long userId = Long.parseLong(authentication.getName());
+        commentService.createComment(userId, createCommentReqDto);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "댓글 수정", description = "댓글 고유 id와 json형태의 내용으로 수정합니다.",
             security = { @SecurityRequirement(name = "bearer-jwt") })
-    public void updateUser(@PathVariable("id") Long id, @RequestBody String content){
-        Comment comment = Comment.builder().
-                id(id).
-                content(content).
-                build();
+    public void updateUser(@PathVariable("id") Long id, @Valid @RequestBody UpdateCommentReqDto updateCommentReqDto){
 
-        commentService.updateComment(comment);
+        commentService.updateComment(id, updateCommentReqDto);
     }
 
     @DeleteMapping("/{id}")
@@ -50,7 +49,8 @@ public class CommentController {
     }
 
     @GetMapping("/postId/{postId}")
-    @Operation(summary = "게시글 댓글 조회", description = "게시글 고유 id로 받은 데이터로 해당 게시글의 댓글들을 조회합니다.")
+    @Operation(summary = "게시글 댓글 조회", description = "게시글 고유 id로 받은 데이터로 해당 게시글의 댓글들을 조회합니다.",
+            security = { @SecurityRequirement(name = "bearer-jwt") })
     public List<Comment> findByPostId(@PathVariable("postId") Long postId){
         return commentService.findByPostId(postId);
     }

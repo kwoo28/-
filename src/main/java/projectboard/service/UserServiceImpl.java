@@ -102,6 +102,10 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void deleteUser(Long id) {
+        User findUser= userMapper.findUserById(id);
+        if(findUser == null){
+            throw new UserNotFoundException("해당 회원이 존재하지 않습니다.");
+        }
         userMapper.deleteUser(id);
     }
 

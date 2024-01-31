@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import projectboard.domain.Message;
+import projectboard.dto.message.CreateMessageReqDto;
 import projectboard.exception.MessageNotFoundException;
 import projectboard.repository.MessageMapper;
 
@@ -15,7 +16,15 @@ public class MessageServiceImpl implements MessageService{
 
     private final MessageMapper messageMapper;
     @Override
-    public void createMessage(Message message) {
+    public void createMessage(Long sendId, CreateMessageReqDto createMessageReqDto) {
+
+        Message message = Message.builder().
+                sendId(sendId).
+                recvId(createMessageReqDto.getRecvId()).
+                title(createMessageReqDto.getTitle()).
+                content(createMessageReqDto.getContent()).
+                build();
+
         messageMapper.createMessage(message);
     }
 

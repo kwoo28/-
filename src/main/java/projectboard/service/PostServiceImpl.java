@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import projectboard.domain.*;
+import projectboard.dto.post.CreatePostReqDto;
+import projectboard.dto.post.UpdatePostDto;
 import projectboard.exception.PostNotFoundException;
 import projectboard.exception.TagNotFoundException;
 import projectboard.exception.UserNotFoundException;
@@ -25,7 +27,15 @@ public class PostServiceImpl implements PostService{
 
     @Transactional
     @Override
-    public void createPost(Post post, List<String> tagNames) {
+    public void createPost(Long userId, CreatePostReqDto createPostReqDto) {
+
+        Post post = Post.builder().
+                userId(userId).
+                title(createPostReqDto.getTitle()).
+                content(createPostReqDto.getContent()).
+                build();
+
+        List<String> tagNames = createPostReqDto.getTagNames();
 
         if(userMapper.findUserById(post.getUserId())==null){
             throw new UserNotFoundException("해당 유저 없음");
@@ -48,12 +58,26 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void updatePost(Post post) {
+    public void updatePost(Long id, UpdatePostDto updatePostDto) {
+
+        if(postMapper.findPostById(id)==null){
+            throw new PostNotFoundException("해당 게시글을 찾을 수 없습니다.");
+        }
+
+        Post post = Post.builder().
+                id(id).
+                title(updatePostDto.getTitle()).
+                content(updatePostDto.getContent()).
+                build();
+
         postMapper.updatePost(post);
     }
 
     @Override
     public void deletePost(Long id) {
+        if(postMapper.findPostById(id) == null){
+            throw new PostNotFoundException("해당 게시글을 찾을 수 없습니다.");
+        }
         postMapper.deletePost(id);
     }
 
