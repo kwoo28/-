@@ -6,12 +6,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import projectboard.domain.User;
 import projectboard.dto.user.*;
+import projectboard.service.KakaoService;
 import projectboard.service.UserService;
-
 
 @Slf4j
 @RestController
@@ -21,6 +28,7 @@ import projectboard.service.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final KakaoService kakaoService;
 
     @PostMapping("/join")
     @Operation(summary = "회원가입", description = "json형태로 받은 데이터로 회원가입합니다.")
@@ -69,5 +77,38 @@ public class UserController {
     @Operation(summary = "로그인", description = "회원아이디와 비밀번호로 로그인합니다.")
     public String login(@Valid @RequestBody LoginReqDto loginReqDto){
         return userService.login(loginReqDto.getUserId(), loginReqDto.getUserPw());
+    }
+
+    @GetMapping("/kakao/callback")
+    @Operation(summary = "카카오 로그인 인가 코드 받기", description = "카카오 인증서버로부터 code를 받습니다.")
+    public KakaoDto kakaoCallback(@RequestParam String code){
+
+        KakaoDto kakaoDto = kakaoService.getKakaoInfo(code);
+
+        /*
+        //HttpHeader 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        //HttpBody 생성
+        //Map으로 사용하면 HttpEntity에 담기지 않음.
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", "bbded244e5e6458f8c01595a2aada301");
+        params.add("redirect_uri", "http://localhost:8080/user/kakao/callback");
+        params.add("code", code);
+
+        //HttpHeader와 HttpBody를 하나로 합침
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(
+                "https://kauth.kakao.com/oauth/token",
+                HttpMethod.POST,
+                httpEntity,
+                String.class
+        );*/
+
+        return kakaoDto;
     }
 }
