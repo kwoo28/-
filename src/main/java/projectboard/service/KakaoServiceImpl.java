@@ -1,5 +1,7 @@
 package projectboard.service;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -12,17 +14,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import projectboard.dto.user.KakaoDto;
+import projectboard.domain.User;
+import projectboard.repository.UserMapper;
+import projectboard.util.JwtUtil;
 
+import java.util.UUID;
+
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class KakaoServiceImpl implements KakaoService{
-    @Value("${kakao.client.id}")
-    private String KAKAO_CLIENT_ID;
-    @Value("${kakao.redirect.url}")
-    private String KAKAO_REDIRECT_URL;
+    @Value("${jwt.secret}")
+    private String key;
+    private Long expireTimeMs = 1000 * 60 * 60l;
 
-    //카카오 로그인 토큰 받기
-    public KakaoDto getKakaoInfo(String code){
+    private final UserMapper userMapper;
+
+    //카카오 로그인 정보 받기
+    @Override
+    public String kakaoLogin(String code){
 
         if(code == null){
             throw new RuntimeException("카카오 로그인 인증 code가 없습니다.");
@@ -62,14 +72,26 @@ public class KakaoServiceImpl implements KakaoService{
             accessToken = (String) jsonObject.get("access_token");
             refreshToken = (String) jsonObject.get("refresh_token");
 
-        } catch (Exception e) {
+        } catch (ParseException e) {
             throw new RuntimeException("해당 json 데이터가 없습니다.");
         }
 
-        return getKakaoInfoWithToken(accessToken);
+        User user = getKakaoInfoWithToken(accessToken);
+
+        if(userMapper.findUserByUserId(user.getUserId())==null){
+            userMapper.createUser(user);
+            log.info("{}의 아이디로 카카오 회원가입합니다.", user.getUserId());
+
+        }
+
+        User findUser = userMapper.findUserByUserId(user.getUserId());
+        String token = JwtUtil.createJwt(findUser.getId(), key, expireTimeMs);
+        log.info("{}의 아이디로 카카오 로그인을 시도합니다. 토큰 : {}", findUser.getUserId(), token);
+
+        return token;
     }
 
-    private KakaoDto getKakaoInfoWithToken(String accessToken){
+    private User getKakaoInfoWithToken(String accessToken){
 
         //HttpHeader 생성
         HttpHeaders headers = new HttpHeaders();
@@ -90,19 +112,26 @@ public class KakaoServiceImpl implements KakaoService{
             //Response 데이터 파싱
             JSONParser jsonParser = new JSONParser();
             JSONObject jsonObject = (JSONObject) jsonParser.parse(response.getBody());
-            //kakao_acount -> profile
+
             JSONObject account = (JSONObject) jsonObject.get("kakao_account");
             JSONObject profile = (JSONObject) account.get("profile");
 
-            Long id = (Long) jsonObject.get("id");
+            String id = String.valueOf(jsonObject.get("id"));
             String nickname = String.valueOf(profile.get("nickname"));
+            String email = String.valueOf(account.get("email"));
 
-            return KakaoDto.builder()
-                    .id(id)
-                    .nickname(nickname).build();
+            UUID password = UUID.randomUUID();
 
-        } catch (Exception e){
+            return User.builder()
+                    .userId(id+"_"+email)
+                    .userPw(password.toString())
+                    .userName(email+"_"+nickname)
+                    .email(email)
+                    .build();
+
+        } catch (ParseException e){
             throw new RuntimeException("해당 json 데이터가 없습니다.");
         }
     }
+
 }

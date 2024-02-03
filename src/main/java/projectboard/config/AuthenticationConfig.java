@@ -25,7 +25,7 @@ public class AuthenticationConfig {
                 .cors(cors -> cors.disable())
                 .authorizeHttpRequests(requests ->
                         requests.requestMatchers("/**","/user/login", "/user/join", "/user/kakao/callback","/v3/**", "/swagger-ui/**").permitAll()
-                                .anyRequest().authenticated()    // 그 외의 모든 요청은 인증 필요
+                                .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요
                 )
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

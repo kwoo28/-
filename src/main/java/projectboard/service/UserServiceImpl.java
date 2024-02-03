@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService{
     private final BCryptPasswordEncoder encoder;
     @Value("${jwt.secret}")
     private String key;
-    private Long expireTimsMs = 1000 * 60 * 60l;
+    private Long expireTimeMs = 1000 * 60 * 60l;
 
     @Override
     public void createUser(CreateUserReqDto createUserReqDto) {
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService{
             throw new UserNotFoundException("로그인 실패했습니다.");
         }
 
-        String token = JwtUtil.createJwt(findUser.getId(), key, expireTimsMs);
+        String token = JwtUtil.createJwt(findUser.getId(), key, expireTimeMs);
         log.info("userId님이 로그인합니다. : {}", findUser.getId());
         log.info("token : {}", token);
 

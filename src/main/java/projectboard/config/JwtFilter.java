@@ -26,6 +26,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+
         log.info("authorization의 토큰으로 접근합니다. : {}", authorization);
 
         if(authorization == null || !authorization.startsWith("Bearer ")){

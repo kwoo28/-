@@ -9,6 +9,7 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
     int createUser(@Param("user") User user);
+
     int updateUser(@Param("user") User user);
     int deleteUser(@Param("id") Long id);
     User findUserById(@Param("id") Long id);
