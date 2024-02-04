@@ -46,7 +46,7 @@ public class PostServiceImpl implements PostService{
 
         //해시태그가 있을땐 생성하지 않음.
         for (String tagName : tagNames) {
-            if (tagMapper.findTagByName(tagName) == null) {
+            if (tagMapper.findTagByName(tagName).isEmpty()) {
                 tagMapper.createTag(tagName);
             }
             PostTag postTag = PostTag.builder().
