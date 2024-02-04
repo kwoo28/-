@@ -79,7 +79,7 @@ public class KakaoServiceImpl implements KakaoService{
 
         User user = getKakaoInfoWithToken(accessToken);
 
-        if(userMapper.findUserByUserId(user.getUserId())==null){
+        if(userMapper.findUserByUserId(user.getUserId()).isEmpty()){
             userMapper.createUser(user);
             log.info("{}의 아이디로 카카오 회원가입합니다.", user.getUserId());
 
