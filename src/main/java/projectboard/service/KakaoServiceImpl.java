@@ -15,6 +15,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import projectboard.domain.User;
+import projectboard.exception.UserNotFoundException;
 import projectboard.repository.UserMapper;
 import projectboard.util.JwtUtil;
 
@@ -84,7 +85,9 @@ public class KakaoServiceImpl implements KakaoService{
 
         }
 
-        User findUser = userMapper.findUserByUserId(user.getUserId());
+        User findUser = userMapper.findUserByUserId(user.getUserId())
+                .orElseThrow(()->new UserNotFoundException("해당 유저 없음."));
+
         String token = JwtUtil.createJwt(findUser.getId(), key, expireTimeMs);
         log.info("{}의 아이디로 카카오 로그인을 시도합니다. 토큰 : {}", findUser.getUserId(), token);
 

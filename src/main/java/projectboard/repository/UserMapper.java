@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import projectboard.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface UserMapper {
@@ -12,9 +13,9 @@ public interface UserMapper {
 
     int updateUser(@Param("user") User user);
     int deleteUser(@Param("id") Long id);
-    User findUserById(@Param("id") Long id);
-    User findUserByUserId(@Param("userId") String userId);
-    User findUserByUserName(@Param("userName") String userName);
-    User findUserByEmail(@Param("email") String email);
+    Optional<User> findUserById(@Param("id") Long id);
+    Optional<User> findUserByUserId(@Param("userId") String userId);
+    Optional<User> findUserByUserName(@Param("userName") String userName);
+    Optional<User> findUserByEmail(@Param("email") String email);
     List<User> findAllUser();
 }

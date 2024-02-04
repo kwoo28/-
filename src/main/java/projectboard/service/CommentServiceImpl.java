@@ -26,12 +26,11 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public void createComment(Long userId, CreateCommentReqDto createCommentReqDto) {
-        if(postMapper.findPostById(createCommentReqDto.getPostId())==null){
-            throw new PostNotFoundException("해당 게시글 없음");
-        }
-        if(userMapper.findUserById(userId)==null){
-            throw new UserNotFoundException("해당 유저 없음");
-        }
+
+        postMapper.findPostById(createCommentReqDto.getPostId())
+                .orElseThrow(() -> new PostNotFoundException("해당 게시글 없음"));
+
+        userMapper.findUserById(userId).orElseThrow(() -> new UserNotFoundException("해당 유저 없음"));
 
         Comment comment = Comment.builder().
                 postId(createCommentReqDto.getPostId()).
@@ -44,9 +43,8 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public void updateComment(Long id, UpdateCommentReqDto updateCommentReqDto) {
-        if(commentMapper.findCommentById(id)==null){
-            throw new CommentNotFoundException("해당 댓글 없음");
-        }
+        commentMapper.findCommentById(id).orElseThrow(() -> new CommentNotFoundException("해당 댓글 없음"));
+
         Comment comment = Comment.builder().
                 id(id).
                 content(updateCommentReqDto.getContent()).
@@ -57,25 +55,24 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public void deleteComment(Long id) {
-        if(commentMapper.findCommentById(id)==null){
-            throw new CommentNotFoundException("해당 댓글 없음");
-        }
+        commentMapper.findCommentById(id)
+                .orElseThrow(() -> new CommentNotFoundException("해당 댓글 없음"));
+
         commentMapper.deleteComment(id);
     }
 
     @Override
     public List<Comment> findByPostId(Long id) {
-        if(postMapper.findPostById(id)==null){
-            throw new PostNotFoundException("해당 게시글 없음");
-        }
+        postMapper.findPostById(id)
+                .orElseThrow(() -> new PostNotFoundException("해당 게시글 없음"));
+
         return commentMapper.findCommentByPostId(id);
     }
 
     @Override
     public List<Comment> findByUserId(Long id) {
-        if(userMapper.findUserById(id)==null){
-            throw new UserNotFoundException("해당 유저 없음");
-        }
+        userMapper.findUserById(id)
+                .orElseThrow(() -> new UserNotFoundException("해당 유저 없음"));
 
         return commentMapper.findCommentByUserId(id);
     }

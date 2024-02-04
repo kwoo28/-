@@ -13,6 +13,7 @@ import projectboard.repository.UserMapper;
 import projectboard.util.JwtUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -41,9 +42,8 @@ public class UserServiceImpl implements UserService{
     @Override
     public void updateUser(Long id, UpdateUserReqDto updateUserReqDto) {
 
-        if(userMapper.findUserById(id)==null){
-            throw new UserNotFoundException("해당 유저 없음");
-        }
+        userMapper.findUserById(id).
+                orElseThrow(() -> new UserNotFoundException("회원 id 조회 실패"));
 
         User user = User.builder().
                 id(id).
@@ -57,70 +57,64 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findById(Long id) {
-        User findUser = userMapper.findUserById(id);
-        if(findUser==null){
-            throw new UserNotFoundException("회원 id 조회 실패");
-        }
+        User findUser = userMapper.findUserById(id).
+                orElseThrow(() -> new UserNotFoundException("회원 id 조회 실패"));
         return findUser;
     }
 
     @Override
     public User findByUserId(String userId) {
-        User findUser = userMapper.findUserByUserId(userId);
-        if(findUser==null){
-            throw new UserNotFoundException("회원 아이디 조회 실패");
-        }
+        User findUser = userMapper.findUserByUserId(userId).
+                orElseThrow(() -> new UserNotFoundException("회원 아이디 조회 실패"));
         return findUser;
     }
 
     @Override
     public User findByUserName(String userName) {
-        User findUser = userMapper.findUserByUserName(userName);
-        if(findUser==null){
-            throw new UserNotFoundException("회원 닉네임 조회 실패");
-        }
+        User findUser = userMapper.findUserByUserName(userName).
+                orElseThrow(() -> new UserNotFoundException("회원 닉네임 조회 실패"));
         return findUser;
     }
 
     @Override
     public User findByEmail(String email) {
-        User findUser = userMapper.findUserByEmail(email);
-        if(findUser==null){
-            throw new UserNotFoundException("회원 이메일 조회 실패");
-        }
+        User findUser = userMapper.findUserByEmail(email).
+                orElseThrow(() -> new UserNotFoundException("회원 이메일 조회 실패"));
         return findUser;
     }
 
     @Override
     public List<User> findAllUser() {
         List<User> findUser = userMapper.findAllUser();
-        if(findUser==null){
+
+        if(findUser.isEmpty()){
             throw new UserNotFoundException("모든 회원 조회 실패");
         }
+
         return findUser;
     }
 
     @Override
     public void deleteUser(Long id) {
-        User findUser= userMapper.findUserById(id);
-        if(findUser == null){
-            throw new UserNotFoundException("해당 회원이 존재하지 않습니다.");
-        }
+        userMapper.findUserById(id).
+                orElseThrow(() -> new UserNotFoundException("회원 id 조회 실패"));
+
         userMapper.deleteUser(id);
     }
 
     @Override
     public String login(String userId, String userPw) {
 
-        User findUser = userMapper.findUserByUserId(userId);
+        User findUser = userMapper.findUserByUserId(userId).
+                orElseThrow(() -> new UserNotFoundException("해당 아이디가 존재하지 않습니다."));
 
-        if((findUser==null) || !encoder.matches(userPw, findUser.getUserPw())){
-            throw new UserNotFoundException("로그인 실패했습니다.");
+        if(!encoder.matches(userPw, findUser.getUserPw())){
+            throw new UserNotFoundException("로그인 실패하였습니다.");
         }
 
         String token = JwtUtil.createJwt(findUser.getId(), key, expireTimeMs);
-        log.info("userId님이 로그인합니다. : {}", findUser.getId());
-        log.info("token : {}", token);
+        log.info("{} 님이 로그인을 시도합니다.", findUser.getUserId());
+        log.info("token을 발급합니다. : {}", token);
 
         return token;
     }

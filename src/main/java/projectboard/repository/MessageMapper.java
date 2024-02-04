@@ -5,12 +5,13 @@ import org.apache.ibatis.annotations.Param;
 import projectboard.domain.Message;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface MessageMapper {
     int createMessage(@Param("message") Message message);
     int deleteMessage(@Param("id") Long id);
-    Message findMessageById(@Param("id") Long id);
+    Optional<Message> findMessageById(@Param("id") Long id);
     List<Message> findMessageBySendId(@Param("sendId") Long sendId);
     List<Message> findMessageByRecvId(@Param("recvId") Long recvId);
     int readMessage(@Param("id") Long id);

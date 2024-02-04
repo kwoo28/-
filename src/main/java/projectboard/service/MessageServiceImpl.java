@@ -30,20 +30,17 @@ public class MessageServiceImpl implements MessageService{
 
     @Override
     public void readMessage(Long id) {
-        Message message = messageMapper.findMessageById(id);
+        Message message = messageMapper.findMessageById(id)
+                .orElseThrow(() -> new MessageNotFoundException("쪽지를 찾을 수 없습니다."));
 
-        if(message==null) throw new MessageNotFoundException("쪽지를 찾을 수 없습니다.");
-        if(message.getChecked()==1) throw new DuplicateKeyException("이미 읽음 확인했습니다.");
+        if(message.getChecked()==1) throw new DuplicateKeyException("이미 읽음처리 되었습니다.");
         if(message.getChecked()==0) messageMapper.readMessage(id);
     }
 
     @Override
     public Message findMessageById(Long id) {
-        Message message = messageMapper.findMessageById(id);
-        if(message==null){
-            throw new MessageNotFoundException("쪽지 id 조회 실패");
-        }
-        return message;
+        return messageMapper.findMessageById(id)
+                .orElseThrow(() -> new MessageNotFoundException("쪽지를 찾을 수 없습니다."));
     }
 
     @Override

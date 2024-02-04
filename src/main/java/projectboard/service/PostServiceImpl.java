@@ -37,32 +37,30 @@ public class PostServiceImpl implements PostService{
 
         List<String> tagNames = createPostReqDto.getTagNames();
 
-        if(userMapper.findUserById(post.getUserId())==null){
-            throw new UserNotFoundException("해당 유저 없음");
-        }
+        userMapper.findUserById(userId).
+                orElseThrow(() -> new UserNotFoundException("회원 id 조회 실패"));
+
         //게시글 생성
         postMapper.createPost(post);
         Long postId = post.getId();
 
-            //해시태그가 있을땐 생성하지 않음.
-            for (String tagName : tagNames) {
-                if (tagMapper.findTagByName(tagName) == null) {
-                    tagMapper.createTag(tagName);
-                }
-                PostTag postTag = PostTag.builder().
-                        tagId(tagMapper.findTagByName(tagName).getId()).
+        //해시태그가 있을땐 생성하지 않음.
+        for (String tagName : tagNames) {
+            if (tagMapper.findTagByName(tagName) == null) {
+                tagMapper.createTag(tagName);
+            }
+            PostTag postTag = PostTag.builder().
+                    tagId(tagMapper.findTagByName(tagName).get().getId()).
                         postId(postId).
                         build();
-                postTagMapper.createPostTag(postTag);
-            }
+            postTagMapper.createPostTag(postTag);
+        }
     }
 
     @Override
     public void updatePost(Long id, UpdatePostDto updatePostDto) {
 
-        if(postMapper.findPostById(id)==null){
-            throw new PostNotFoundException("해당 게시글을 찾을 수 없습니다.");
-        }
+        postMapper.findPostById(id).orElseThrow(() -> new PostNotFoundException("해당 게시글을 찾을 수 없습니다."));
 
         Post post = Post.builder().
                 id(id).
@@ -75,44 +73,49 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public void deletePost(Long id) {
-        if(postMapper.findPostById(id) == null){
-            throw new PostNotFoundException("해당 게시글을 찾을 수 없습니다.");
-        }
+        postMapper.findPostById(id).
+                orElseThrow(() -> new PostNotFoundException("해당 게시글을 찾을 수 없습니다."));
+
         postMapper.deletePost(id);
     }
 
     @Override
     public Post findById(Long id) {
-        return postMapper.findPostById(id);
+        return postMapper.findPostById(id)
+                .orElseThrow(() -> new PostNotFoundException("해당 게시글을 찾을 수 없습니다."));
     }
 
     @Override
     public List<Post> findByTitle(String title) {
-
         List<Post> posts = postMapper.findPostByTitle(title);
+
         if(posts.isEmpty()){
             throw new PostNotFoundException("게시글 조회 실패");
         }
+
         return posts;
     }
 
     @Override
     public List<Post> findByContent(String content) {
         List<Post> posts = postMapper.findPostByContent(content);
+
         if(posts.isEmpty()){
             throw new PostNotFoundException("게시글 조회 실패");
         }
+
         return posts;
     }
 
     @Override
     public List<Post> findByTagName(String tagName) {
-        Tag tag = tagMapper.findTagByName(tagName);
-        if(tag == null){
-            throw new TagNotFoundException("해당 태그 없음.");
-        }
+        Tag tag = tagMapper.findTagByName(tagName)
+                .orElseThrow(() -> new TagNotFoundException("해당 태그를 찾을 수 없습니다."));
+
         Long tagId = tag.getId();
+
         List<Post> posts = postMapper.findPostByTagId(tagId);
+
         if(posts.isEmpty()){
             throw new PostNotFoundException("게시글 조회 실패");
         }
@@ -121,16 +124,16 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<Post> findByUserName(String userName) {
-        User user = userMapper.findUserByUserName(userName);
-        if(user==null){
-            throw new UserNotFoundException("해당 유저 없음.");
-        }
+
+        User user = userMapper.findUserByUserName(userName).orElseThrow(() -> new UserNotFoundException("해당 유저 없음."));
 
         Long userId = user.getId();
         List<Post> posts = postMapper.findPostByUserId(userId);
+
         if(posts.isEmpty()){
             throw new PostNotFoundException("게시글 조회 실패");
         }
+
         return posts;
     }
 }
