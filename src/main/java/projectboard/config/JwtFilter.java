@@ -51,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         //권한 부여
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userId, null, List.of(new SimpleGrantedAuthority("USER")));
+                new UsernamePasswordAuthenticationToken(userId, null);
 
         //Detail을 넣음.
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
